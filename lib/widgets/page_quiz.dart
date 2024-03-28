@@ -26,6 +26,7 @@ class _PageQuizzState extends State<PageQuizz> {
   @override
   void initState() {
     // TODO: implement initState
+
     super.initState();
     question = listeQuestions[index];
   }
@@ -44,7 +45,61 @@ class _PageQuizzState extends State<PageQuizz> {
         ),
         centerTitle: true,
       ),
-      body: Center(),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Text("Question n° ${index + 1}",
+                style: TextStyle(color: Colors.grey[900])),
+            Text("Score: $score / $index",
+                style: TextStyle(color: Colors.grey[900])),
+            Card(
+              elevation: 10,
+              child: Container(
+                height: MediaQuery.of(context).size.width * 0.75,
+                width: MediaQuery.of(context).size.width * 0.75,
+                child: Image.asset(
+                  "assets/${question.imagePath}",
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            Text(
+              question.question,
+              style: TextStyle(
+                color: Colors.grey[900],
+                fontSize: 20
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                boutonBool(true),
+                boutonBool(false)
+              ],
+            ),
+          ],
+        ),
+      ),
     );
+  }
+
+  ElevatedButton boutonBool(bool b) {
+    return  ElevatedButton(
+      onPressed: (() => dialogue(b)),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.blue
+      ),
+      child: Text((b) ? "Vrai":"Faux",
+       style: const TextStyle(
+        color: Colors.white,
+        fontSize: 25,
+      ),
+      ),
+    );
+  }
+
+  Future<Null>dialogue(bool b) async {
+
   }
 }
