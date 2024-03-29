@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter/widgets.dart";
 import "package:flutter_quiz/model/question.dart";
 
 class PageQuizz extends StatefulWidget {
@@ -66,17 +67,11 @@ class _PageQuizzState extends State<PageQuizz> {
             ),
             Text(
               question.question,
-              style: TextStyle(
-                color: Colors.grey[900],
-                fontSize: 20
-              ),
+              style: TextStyle(color: Colors.grey[900], fontSize: 20),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                boutonBool(true),
-                boutonBool(false)
-              ],
+              children: <Widget>[boutonBool(true), boutonBool(false)],
             ),
           ],
         ),
@@ -85,21 +80,115 @@ class _PageQuizzState extends State<PageQuizz> {
   }
 
   ElevatedButton boutonBool(bool b) {
-    return  ElevatedButton(
+    return ElevatedButton(
       onPressed: (() => dialogue(b)),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.blue
-      ),
-      child: Text((b) ? "Vrai":"Faux",
-       style: const TextStyle(
-        color: Colors.white,
-        fontSize: 25,
-      ),
+      style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+      child: Text(
+        (b) ? "Vrai" : "Faux",
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 25,
+        ),
       ),
     );
   }
 
-  Future<Null>dialogue(bool b) async {
+  Future<Null> dialogue(bool b) async {
+    // ignore: unrelated_type_equality_checks
+    bool bonneReponse = (b == question.reponse);
+    String vrai = "assets/ganger.png";
+    String faux = "assets/triste.png";
+    if (bonneReponse) {
+      score++;
+    }
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: Text(
+              (bonneReponse) ? "C'est gagner" : "Oups vous avez perdu",
+              style:
+                  TextStyle(color: (bonneReponse) ? Colors.green : Colors.red),
+            ),
+            contentPadding: const EdgeInsets.all(20),
+            children: <Widget>[
+              Image.asset(
+                (bonneReponse) ? vrai : faux,
+                fit: BoxFit.cover,
+              ),
+              Container(
+                height: 25,
+              ),
+              Text(
+                question.explication,
+                style: TextStyle(
+                  color: Colors.grey[900],
+                  fontSize: 25,
+                ),
+              ),
+              Container(
+                height: 25,
+              ),
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    questionSuivant();
+                  },
+                  child: const Text(
+                    'Au Suivant',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 25,
+                    ),
+                  )),
+            ],
+          );
+        });
+  }
 
+  Future<Null> alerte() async {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext buildContext) {
+          return AlertDialog(
+              title: const Text(
+                "C'est fini",
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 30,
+                ),
+              ),
+              contentPadding: EdgeInsets.all(10),
+              content: Text("Votre Score : $score / $index"),
+              actions: <Widget>[
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(buildContext);
+                    Navigator.pop(context);
+                  },
+                  child: const Text("OK",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                      )),
+                )
+              ]);
+        });
+  }
+
+  void questionSuivant() {
+    if (index < listeQuestions.length) {
+      index++;
+      setState(() {
+        question = listeQuestions[index];
+      });
+    } else {
+      alerte();
+    }
   }
 }
