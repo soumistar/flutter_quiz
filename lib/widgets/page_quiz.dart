@@ -182,7 +182,7 @@ class _PageQuizzState extends State<PageQuizz> {
   }
 
   void questionSuivant() {
-    if (index < listeQuestions.length) {
+    if (index < listeQuestions.length - 1) {
       index++;
       setState(() {
         question = listeQuestions[index];
