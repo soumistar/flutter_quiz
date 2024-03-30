@@ -189,6 +189,7 @@ class _PageQuizzState extends State<PageQuizz> {
       });
     } else {
       alerte();
+      
     }
   }
 }
